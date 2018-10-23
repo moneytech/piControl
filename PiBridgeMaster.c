@@ -632,6 +632,11 @@ int PiBridgeMaster_Run(void)
 						RevPiDevice_getDev(2)->i16uErrorCnt, RevPiDevice_getDev(3)->i16uErrorCnt,
 						RevPiDevice_getDev(4)->i16uErrorCnt, RevPiDevice_getDev(5)->i16uErrorCnt,
 						RevPiDevice_getDev(6)->i16uErrorCnt, RevPiDevice_getDev(7)->i16uErrorCnt);
+
+#warning Das Setzen der Default-Werte ist zu grob!
+					my_rt_mutex_lock(&piDev_g.lockPI);
+					memcpy(piDev_g.ai8uPI, piDev_g.ai8uPIDefault, KB_PI_LEN);
+					rt_mutex_unlock(&piDev_g.lockPI);
 				}
 			} else {
 				ret = 1;

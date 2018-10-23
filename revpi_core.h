@@ -12,6 +12,7 @@
 #include <linux/gpio.h>
 #include <linux/wait.h>
 #include <linux/list.h>
+#include <linux/netdevice.h>
 
 #include "IoProtocol.h"
 #include "ModGateComMain.h"
