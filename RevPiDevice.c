@@ -120,12 +120,6 @@ void RevPiDevice_init(void)
 	RevPiDevice_incDevCnt();
 }
 
-void RevPiDevice_finish(void)
-{
-	//pr_info("RevPiDevice_finish()\n");
-	piIoComm_finish();
-}
-
 //*************************************************************************************************
 //| Function: RevPiDevice_run
 //|

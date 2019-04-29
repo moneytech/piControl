@@ -38,11 +38,9 @@
 #include <linux/gpio/machine.h>
 
 #define REV_PI_IO_TIMEOUT           10         // msec
-#define REV_PI_RECV_BUFFER_SIZE     100
 
 #define REV_PI_RECV_IO_HEADER_LEN	65530
 
-#define REV_PI_TTY_DEVICE	"/dev/ttyAMA0"
 
 typedef enum _EGpioValue
 {
@@ -55,19 +53,10 @@ typedef enum _EGpioMode
     enGpioMode_Output,
 } EGpioMode;
 
-extern struct file *piIoComm_fd_m;
-extern int piIoComm_timeoutCnt_m;
 
-int piIoComm_open_serial(void);
-int piIoComm_send(INT8U *buf_p, INT16U i16uLen_p);
-int piIoComm_recv(INT8U *buf_p, INT16U i16uLen_p);	// using default timeout REV_PI_IO_TIMEOUT
-int piIoComm_recv_timeout(INT8U * buf_p, INT16U i16uLen_p, INT16U timeout_p);
-int UartThreadProc ( void *pArg);
+
 
 INT8U piIoComm_Crc8(INT8U *pi8uFrame_p, INT16U i16uLen_p);
-
-int  piIoComm_init(void);
-void piIoComm_finish(void);
 
 void piIoComm_writeSniff1A(EGpioValue eVal_p, EGpioMode eMode_p);
 void piIoComm_writeSniff1B(EGpioValue eVal_p, EGpioMode eMode_p);
