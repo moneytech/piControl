@@ -36,6 +36,7 @@
 #include <IoProtocol.h>
 #include <linux/gpio/consumer.h>
 #include <linux/gpio/machine.h>
+#include <linux/pibridge.h>
 
 #define REV_PI_IO_TIMEOUT           10         // msec
 

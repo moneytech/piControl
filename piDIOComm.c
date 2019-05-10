@@ -81,42 +81,42 @@ INT32U piDIOComm_Config(uint8_t i8uAddress, uint16_t i16uNumEntries, SEntryInfo 
 
 	for (i = 0; i < i16uNumEntries; i++) {
 		pr_info_dio("addr %2d  type %d  len %3d  offset %3d  value %d 0x%x\n",
-			    pEnt[i].i8uAddress, pEnt[i].i8uType, pEnt[i].i16uBitLength, pEnt[i].i16uOffset,
-			    pEnt[i].i32uDefault, pEnt[i].i32uDefault);
+				pEnt[i].i8uAddress, pEnt[i].i8uType, pEnt[i].i16uBitLength, pEnt[i].i16uOffset,
+				pEnt[i].i32uDefault, pEnt[i].i32uDefault);
 
 		if (pEnt[i].i16uOffset >= 88 && pEnt[i].i16uOffset <= 103) {
 			dioConfig_s[i8uConfigured_s].i32uInputMode |=
-			    (pEnt[i].i32uDefault & 0x03) << ((pEnt[i].i16uOffset - 88) * 2);
+				(pEnt[i].i32uDefault & 0x03) << ((pEnt[i].i16uOffset - 88) * 2);
 			if ((pEnt[i].i32uDefault == 1 || pEnt[i].i32uDefault == 2)
-			    || (pEnt[i].i32uDefault == 3 && ((pEnt[i].i16uOffset - 88) % 2) == 0)) {
+					|| (pEnt[i].i32uDefault == 3 && ((pEnt[i].i16uOffset - 88) % 2) == 0)) {
 				i8uNumCounter[i8uAddress]++;
 				i16uCounterAct[i8uAddress] |= (1 << (pEnt[i].i16uOffset - 88));
 			}
 		} else {
 			switch (pEnt[i].i16uOffset) {
-			case 104:
-				dioConfig_s[i8uConfigured_s].i8uInputDebounce = pEnt[i].i32uDefault;
-				break;
-			case 106:
-				dioConfig_s[i8uConfigured_s].i16uOutputPushPull = pEnt[i].i32uDefault;
-				break;
-			case 108:
-				dioConfig_s[i8uConfigured_s].i16uOutputOpenLoadDetect = pEnt[i].i32uDefault;
-				break;
-			case 110:
-				dioConfig_s[i8uConfigured_s].i16uOutputPWM = pEnt[i].i32uDefault;
-				break;
-			case 112:
-				dioConfig_s[i8uConfigured_s].i8uOutputPWMIncrement = pEnt[i].i32uDefault;
-				break;
+				case 104:
+					dioConfig_s[i8uConfigured_s].i8uInputDebounce = pEnt[i].i32uDefault;
+					break;
+				case 106:
+					dioConfig_s[i8uConfigured_s].i16uOutputPushPull = pEnt[i].i32uDefault;
+					break;
+				case 108:
+					dioConfig_s[i8uConfigured_s].i16uOutputOpenLoadDetect = pEnt[i].i32uDefault;
+					break;
+				case 110:
+					dioConfig_s[i8uConfigured_s].i16uOutputPWM = pEnt[i].i32uDefault;
+					break;
+				case 112:
+					dioConfig_s[i8uConfigured_s].i8uOutputPWMIncrement = pEnt[i].i32uDefault;
+					break;
 			}
 		}
 	}
 	dioConfig_s[i8uConfigured_s].i8uCrc =
-	    piIoComm_Crc8((INT8U *) & dioConfig_s[i8uConfigured_s], sizeof(SDioConfig) - 1);
+		piIoComm_Crc8((INT8U *) & dioConfig_s[i8uConfigured_s], sizeof(SDioConfig) - 1);
 
 	pr_info_dio("piDIOComm_Config done addr %d input mode %08x  numCnt %d\n", i8uAddress,
-		    dioConfig_s[i8uConfigured_s].i32uInputMode, i8uNumCounter[i8uAddress]);
+			dioConfig_s[i8uConfigured_s].i32uInputMode, i8uNumCounter[i8uAddress]);
 	i8uConfigured_s++;
 
 	return 0;
@@ -129,8 +129,8 @@ INT32U piDIOComm_Init(INT8U i8uDevice_p)
 	INT8U i, len_l;
 
 	pr_info_dio("piDIOComm_Init %d of %d  addr %d numCnt %d\n", i8uDevice_p, i8uConfigured_s,
-		    RevPiDevice_getDev(i8uDevice_p)->i8uAddress,
-		    i8uNumCounter[RevPiDevice_getDev(i8uDevice_p)->i8uAddress]);
+			RevPiDevice_getDev(i8uDevice_p)->i8uAddress,
+			i8uNumCounter[RevPiDevice_getDev(i8uDevice_p)->i8uAddress]);
 
 	for (i = 0; i < i8uConfigured_s; i++) {
 		if (dioConfig_s[i].uHeader.sHeaderTyp1.bitAddress == RevPiDevice_getDev(i8uDevice_p)->i8uAddress) {
@@ -141,7 +141,7 @@ INT32U piDIOComm_Init(INT8U i8uDevice_p)
 				ret = piIoComm_recv((INT8U *) & sResponse_l, IOPROTOCOL_HEADER_LENGTH + len_l + 1);
 				if (ret > 0) {
 					if (sResponse_l.ai8uData[len_l] ==
-					    piIoComm_Crc8((INT8U *) & sResponse_l, IOPROTOCOL_HEADER_LENGTH + len_l)) {
+							piIoComm_Crc8((INT8U *) & sResponse_l, IOPROTOCOL_HEADER_LENGTH + len_l)) {
 						return 0;	// success
 					} else {
 						return 1;	// wrong crc
@@ -167,12 +167,6 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 	INT8U i8uAddress;
 	int ret;
 	static INT8U last_out[40][18];
-#ifdef DEBUG_DEVICE_IO
-	static INT32U good, bad;
-#endif
-#ifdef DEBUG_DEVICE_DIO
-	static INT8U last_in[40][2];
-#endif
 
 	if (RevPiDevice_getDev(i8uDevice_p)->sId.i16uFBS_OutputLength != 18) {
 		return 4;
@@ -228,13 +222,6 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 
 	sRequest_l.ai8uData[len_l] = piIoComm_Crc8((INT8U *) & sRequest_l, IOPROTOCOL_HEADER_LENGTH + len_l);
 
-#ifdef DEBUG_DEVICE_DIO
-	if (last_out[i8uAddress][0] != sRequest_l.ai8uData[0] || last_out[i8uAddress][1] != sRequest_l.ai8uData[1]) {
-		pr_info_dio("dev %2d: send cyclic Data addr %d output 0x%02x 0x%02x\n",
-			    i8uAddress, RevPiDevice_getDev(i8uDevice_p].i16uOutputOffset,
-			    sRequest_l.ai8uData[0], sRequest_l.ai8uData[1]);
-	}
-#endif
 	memcpy(last_out[i8uAddress], data_out, sizeof(data_out));
 
 	ret = piIoComm_send((INT8U *) & sRequest_l, IOPROTOCOL_HEADER_LENGTH + len_l + 1);
@@ -244,50 +231,31 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 		ret = piIoComm_recv((INT8U *) & sResponse_l, IOPROTOCOL_HEADER_LENGTH + len_l + 1);
 		if (ret > 0) {
 			if (sResponse_l.ai8uData[len_l] ==
-			    piIoComm_Crc8((INT8U *) & sResponse_l, IOPROTOCOL_HEADER_LENGTH + len_l)) {
+					piIoComm_Crc8((INT8U *) & sResponse_l, IOPROTOCOL_HEADER_LENGTH + len_l)) {
 				memcpy(&data_in[0], sResponse_l.ai8uData, 3 * sizeof(INT16U));
 				memset(&data_in[6], 0, 64);
 				p = 0;
 				for (i = 0; i < 16; i++) {
 					if (i16uCounterAct[i8uAddress] & (1 << i)) {
 						memcpy(&data_in[3 * sizeof(INT16U) + i * sizeof(INT32U)],
-						       &sResponse_l.ai8uData[3 * sizeof(INT16U) + p * sizeof(INT32U)],
-						       sizeof(INT32U));
+								&sResponse_l.ai8uData[3 * sizeof(INT16U) + p * sizeof(INT32U)],
+								sizeof(INT32U));
 						p++;
 					}
 				}
 
 				rt_mutex_lock(&piDev_g.lockPI);
 				memcpy(piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset, data_in,
-				       sizeof(data_in));
+						sizeof(data_in));
 				rt_mutex_unlock(&piDev_g.lockPI);
 
-#ifdef DEBUG_DEVICE_DIO
-				if (last_in[i8uAddress][0] != sResponse_l.ai8uData[0]
-				    || last_in[i8uAddress][1] != sResponse_l.ai8uData[1]) {
-					last_in[i8uAddress][0] = sResponse_l.ai8uData[0];
-					last_in[i8uAddress][1] = sResponse_l.ai8uData[1];
-					pr_info_dio("dev %2d: recv cyclic Data addr %d input 0x%02x 0x%02x\n\n",
-						    i8uAddress, RevPiDevice_getDev(i8uDevice_p].i16uInputOffset,
-						    sResponse_l.ai8uData[0], sResponse_l.ai8uData[1]);
-				}
-#endif
-#ifdef DEBUG_DEVICE_IO
-				good++;
-#endif
 			} else {
-#ifdef DEBUG_DEVICE_IO
-				bad++;
-				if ((bad % 1000) == 0) {
-					pr_info("dev %2d: recv ioprotocol crc error %u/%u\n", i8uAddress, bad, good);
-				}
-#endif
 				i32uRv_l = 1;
 			}
 		} else {
 			i32uRv_l = 2;
 			pr_info_dio("dev %2d: recv ioprotocol timeout error exp %d\n",
-				    i8uAddress, IOPROTOCOL_HEADER_LENGTH + len_l + 1);
+					i8uAddress, IOPROTOCOL_HEADER_LENGTH + len_l + 1);
 
 		}
 	} else {

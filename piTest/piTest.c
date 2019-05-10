@@ -64,18 +64,18 @@ char *getReadError(int error)
 		"Unknown error"
 	};
 	switch (error) {
-	case -1:
-		return ReadError[0];
-		break;
-	case -2:
-		return ReadError[1];
-		break;
-	case -3:
-		return ReadError[2];
-		break;
-	default:
-		return ReadError[3];
-		break;
+		case -1:
+			return ReadError[0];
+			break;
+		case -2:
+			return ReadError[1];
+			break;
+		case -3:
+			return ReadError[2];
+			break;
+		default:
+			return ReadError[3];
+			break;
 	}
 }
 
@@ -99,18 +99,18 @@ char *getWriteError(int error)
 		"Unknown error"
 	};
 	switch (error) {
-	case -1:
-		return WriteError[0];
-		break;
-	case -2:
-		return WriteError[1];
-		break;
-	case -3:
-		return WriteError[2];
-		break;
-	default:
-		return WriteError[3];
-		break;
+		case -1:
+			return WriteError[0];
+			break;
+		case -2:
+			return WriteError[1];
+			break;
+		case -3:
+			return WriteError[2];
+			break;
+		default:
+			return WriteError[3];
+			break;
 	}
 }
 
@@ -127,80 +127,80 @@ char *getWriteError(int error)
 char *getModuleName(uint16_t moduletype)
 {
 	switch (moduletype) {
-	case 95:
-		return "RevPi Core";
-	case 96:
-		return "RevPi DIO";
-	case 97:
-		return "RevPi DI";
-	case 98:
-		return "RevPi DO";
-	case 103:
-		return "RevPi AIO";
-	case 104:
-		return "RevPi Compact";
-	case 105:
-		return "RevPi Connect";
-	case 109:
-		return "RevPi CON CAN";
-	case 110:
-		return "RevPi CON M-Bus";
-	case 111:
-		return "RevPi CON BT";
+		case 95:
+			return "RevPi Core";
+		case 96:
+			return "RevPi DIO";
+		case 97:
+			return "RevPi DI";
+		case 98:
+			return "RevPi DO";
+		case 103:
+			return "RevPi AIO";
+		case 104:
+			return "RevPi Compact";
+		case 105:
+			return "RevPi Connect";
+		case 109:
+			return "RevPi CON CAN";
+		case 110:
+			return "RevPi CON M-Bus";
+		case 111:
+			return "RevPi CON BT";
 
-	case PICONTROL_SW_MODBUS_TCP_SLAVE:
-		return "ModbusTCP Slave Adapter";
-	case PICONTROL_SW_MODBUS_RTU_SLAVE:
-		return "ModbusRTU Slave Adapter";
-	case PICONTROL_SW_MODBUS_TCP_MASTER:
-		return "ModbusTCP Master Adapter";
-	case PICONTROL_SW_MODBUS_RTU_MASTER:
-		return "ModbusRTU Master Adapter";
-	case PICONTROL_SW_PROFINET_CONTROLLER:
-		return "Profinet Controller Adapter";
-	case PICONTROL_SW_PROFINET_DEVICE:
-		return "Profinet Device Adapter";
-	case PICONTROL_SW_REVPI_SEVEN:
-		return "RevPi7 Adapter";
-	case PICONTROL_SW_REVPI_CLOUD:
-		return "RevPi Cloud Adapter";
+		case PICONTROL_SW_MODBUS_TCP_SLAVE:
+			return "ModbusTCP Slave Adapter";
+		case PICONTROL_SW_MODBUS_RTU_SLAVE:
+			return "ModbusRTU Slave Adapter";
+		case PICONTROL_SW_MODBUS_TCP_MASTER:
+			return "ModbusTCP Master Adapter";
+		case PICONTROL_SW_MODBUS_RTU_MASTER:
+			return "ModbusRTU Master Adapter";
+		case PICONTROL_SW_PROFINET_CONTROLLER:
+			return "Profinet Controller Adapter";
+		case PICONTROL_SW_PROFINET_DEVICE:
+			return "Profinet Device Adapter";
+		case PICONTROL_SW_REVPI_SEVEN:
+			return "RevPi7 Adapter";
+		case PICONTROL_SW_REVPI_CLOUD:
+			return "RevPi Cloud Adapter";
 
-	case 71:
-		return "Gateway CANopen";
-	case 72:
-		return "Gateway CC-Link";
-	case 73:
-		return "Gateway DeviceNet";
-	case 74:
-		return "Gateway EtherCAT";
-	case 75:
-		return "Gateway EtherNet/IP";
-	case 76:
-		return "Gateway Powerlink";
-	case 77:
-		return "Gateway Profibus";
-	case 78:
-		return "Gateway Profinet RT";
-	case 79:
-		return "Gateway Profinet IRT";
-	case 80:
-		return "Gateway CANopen Master";
-	case 81:
-		return "Gateway SercosIII";
-	case 82:
-		return "Gateway Serial";
-	case 85:
-		return "Gateway EtherCAT Master";
-	case 92:
-		return "Gateway ModbusRTU";
-	case 93:
-		return "Gateway ModbusTCP";
-	case 100:
-		return "Gateway DMX";
+		case 71:
+			return "Gateway CANopen";
+		case 72:
+			return "Gateway CC-Link";
+		case 73:
+			return "Gateway DeviceNet";
+		case 74:
+			return "Gateway EtherCAT";
+		case 75:
+			return "Gateway EtherNet/IP";
+		case 76:
+			return "Gateway Powerlink";
+		case 77:
+			return "Gateway Profibus";
+		case 78:
+			return "Gateway Profinet RT";
+		case 79:
+			return "Gateway Profinet IRT";
+		case 80:
+			return "Gateway CANopen Master";
+		case 81:
+			return "Gateway SercosIII";
+		case 82:
+			return "Gateway Serial";
+		case 85:
+			return "Gateway EtherCAT Master";
+		case 92:
+			return "Gateway ModbusRTU";
+		case 93:
+			return "Gateway ModbusTCP";
+		case 100:
+			return "Gateway DMX";
 
-	default:
-		return "unknown moduletype";
-		break;
+		default:
+			return "unknown moduletype";
+			break;
 	}
 }
 
@@ -229,9 +229,9 @@ void showDeviceList(void)
 	for (dev = 0; dev < devcount; dev++) {
 		// Show device number, address and module type
 		printf("Address: %d module type: %d (0x%x) %s V%d.%d\n", asDevList[dev].i8uAddress,
-		       asDevList[dev].i16uModuleType, asDevList[dev].i16uModuleType,
-		       getModuleName(asDevList[dev].i16uModuleType & PICONTROL_NOT_CONNECTED_MASK),
-		       asDevList[dev].i16uSW_Major, asDevList[dev].i16uSW_Minor);
+				asDevList[dev].i16uModuleType, asDevList[dev].i16uModuleType,
+				getModuleName(asDevList[dev].i16uModuleType & PICONTROL_NOT_CONNECTED_MASK),
+				asDevList[dev].i16uSW_Major, asDevList[dev].i16uSW_Minor);
 
 		if (asDevList[dev].i8uActive) {
 			printf("Module is present\n");
@@ -245,11 +245,11 @@ void showDeviceList(void)
 
 		// Show offset and length of input section in process image
 		printf("     input offset: %d length: %d\n", asDevList[dev].i16uInputOffset,
-		       asDevList[dev].i16uInputLength);
+				asDevList[dev].i16uInputLength);
 
 		// Show offset and length of output section in process image
 		printf("    output offset: %d length: %d\n", asDevList[dev].i16uOutputOffset,
-		       asDevList[dev].i16uOutputLength);
+				asDevList[dev].i16uOutputLength);
 		printf("\n");
 	}
 
@@ -296,14 +296,14 @@ void readData(uint16_t offset, uint16_t length, bool cyclic, char format, bool q
 					printf("%02x ", pValues[val]);
 				} else if (format == 'b') {
 					printf("%c%c%c%c%c%c%c%c ",
-						pValues[val] & 0x80 ? '1' : '0',
-						pValues[val] & 0x40 ? '1' : '0',
-						pValues[val] & 0x20 ? '1' : '0',
-						pValues[val] & 0x10 ? '1' : '0',
-						pValues[val] & 0x08 ? '1' : '0',
-						pValues[val] & 0x04 ? '1' : '0',
-						pValues[val] & 0x02 ? '1' : '0',
-						pValues[val] & 0x01 ? '1' : '0');
+							pValues[val] & 0x80 ? '1' : '0',
+							pValues[val] & 0x40 ? '1' : '0',
+							pValues[val] & 0x20 ? '1' : '0',
+							pValues[val] & 0x10 ? '1' : '0',
+							pValues[val] & 0x08 ? '1' : '0',
+							pValues[val] & 0x04 ? '1' : '0',
+							pValues[val] & 0x02 ? '1' : '0',
+							pValues[val] & 0x01 ? '1' : '0');
 				} else if (format == 's') {
 					uint16_t ui;
 					int16_t *psi;
@@ -375,7 +375,7 @@ void readVariableValue(char *pszVariableName, bool cyclic, char format, bool qui
 				if (format == 'h') {
 					if (!quiet)
 						printf("1 Byte-Value of %s: %02x hex (=%d dez)\n", pszVariableName,
-						       i8uValue, i8uValue);
+								i8uValue, i8uValue);
 					else
 						printf("%x\n", i8uValue);
 				} else if (format == 'b') {
@@ -383,18 +383,18 @@ void readVariableValue(char *pszVariableName, bool cyclic, char format, bool qui
 						printf("1 Byte-Value of %s: ", pszVariableName);
 
 					printf("%c%c%c%c%c%c%c%c\n",
-						i8uValue & 0x80 ? '1' : '0',
-						i8uValue & 0x40 ? '1' : '0',
-						i8uValue & 0x20 ? '1' : '0',
-						i8uValue & 0x10 ? '1' : '0',
-						i8uValue & 0x08 ? '1' : '0',
-						i8uValue & 0x04 ? '1' : '0',
-						i8uValue & 0x02 ? '1' : '0',
-						i8uValue & 0x01 ? '1' : '0');
+							i8uValue & 0x80 ? '1' : '0',
+							i8uValue & 0x40 ? '1' : '0',
+							i8uValue & 0x20 ? '1' : '0',
+							i8uValue & 0x10 ? '1' : '0',
+							i8uValue & 0x08 ? '1' : '0',
+							i8uValue & 0x04 ? '1' : '0',
+							i8uValue & 0x02 ? '1' : '0',
+							i8uValue & 0x01 ? '1' : '0');
 				} else {
 					if (!quiet)
 						printf("1 Byte-Value of %s: %d dez (=%02x hex)\n", pszVariableName,
-						       i8uValue, i8uValue);
+								i8uValue, i8uValue);
 					else
 						printf("%d\n", i8uValue);
 				}
@@ -411,7 +411,7 @@ void readVariableValue(char *pszVariableName, bool cyclic, char format, bool qui
 				if (format == 'h') {
 					if (!quiet)
 						printf("2 Byte-Value of %s: %04x hex (=%d dez)\n", pszVariableName,
-						       i16uValue, i16uValue);
+								i16uValue, i16uValue);
 					else
 						printf("%x\n", i16uValue);
 				} else if (format == 'b') {
@@ -419,28 +419,28 @@ void readVariableValue(char *pszVariableName, bool cyclic, char format, bool qui
 						printf("2 Byte-Value of %s: ", pszVariableName);
 
 					printf("%c%c%c%c%c%c%c%c ",
-					       i16uValue & 0x8000 ? '1' : '0',
-					       i16uValue & 0x4000 ? '1' : '0',
-					       i16uValue & 0x2000 ? '1' : '0',
-					       i16uValue & 0x1000 ? '1' : '0',
-					       i16uValue & 0x0800 ? '1' : '0',
-					       i16uValue & 0x0400 ? '1' : '0',
-					       i16uValue & 0x0200 ? '1' : '0',
-					       i16uValue & 0x0100 ? '1' : '0');
+							i16uValue & 0x8000 ? '1' : '0',
+							i16uValue & 0x4000 ? '1' : '0',
+							i16uValue & 0x2000 ? '1' : '0',
+							i16uValue & 0x1000 ? '1' : '0',
+							i16uValue & 0x0800 ? '1' : '0',
+							i16uValue & 0x0400 ? '1' : '0',
+							i16uValue & 0x0200 ? '1' : '0',
+							i16uValue & 0x0100 ? '1' : '0');
 
 					printf("%c%c%c%c%c%c%c%c\n",
-					       i16uValue & 0x0080 ? '1' : '0',
-					       i16uValue & 0x0040 ? '1' : '0',
-					       i16uValue & 0x0020 ? '1' : '0',
-					       i16uValue & 0x0010 ? '1' : '0',
-					       i16uValue & 0x0008 ? '1' : '0',
-					       i16uValue & 0x0004 ? '1' : '0',
-					       i16uValue & 0x0002 ? '1' : '0',
-					       i16uValue & 0x0001 ? '1' : '0');
+							i16uValue & 0x0080 ? '1' : '0',
+							i16uValue & 0x0040 ? '1' : '0',
+							i16uValue & 0x0020 ? '1' : '0',
+							i16uValue & 0x0010 ? '1' : '0',
+							i16uValue & 0x0008 ? '1' : '0',
+							i16uValue & 0x0004 ? '1' : '0',
+							i16uValue & 0x0002 ? '1' : '0',
+							i16uValue & 0x0001 ? '1' : '0');
 				} else {
 					if (!quiet)
 						printf("2 Byte-Value of %s: %d dez (=%04x hex)\n", pszVariableName,
-						       i16uValue, i16uValue);
+								i16uValue, i16uValue);
 					else
 						printf("%d\n", i16uValue);
 				}
@@ -457,7 +457,7 @@ void readVariableValue(char *pszVariableName, bool cyclic, char format, bool qui
 				if (format == 'h') {
 					if (!quiet)
 						printf("4 Byte-Value of %s: %08x hex (=%d dez)\n", pszVariableName,
-						       i32uValue, i32uValue);
+								i32uValue, i32uValue);
 					else
 						printf("%x\n", i32uValue);
 				} else if (format == 'b') {
@@ -465,48 +465,48 @@ void readVariableValue(char *pszVariableName, bool cyclic, char format, bool qui
 						printf("4 Byte-Value of %s: ", pszVariableName);
 
 					printf("%c%c%c%c%c%c%c%c ",
-						i32uValue & 0x80000000 ? '1' : '0',
-						i32uValue & 0x40000000 ? '1' : '0',
-						i32uValue & 0x20000000 ? '1' : '0',
-						i32uValue & 0x10000000 ? '1' : '0',
-						i32uValue & 0x08000000 ? '1' : '0',
-						i32uValue & 0x04000000 ? '1' : '0',
-						i32uValue & 0x02000000 ? '1' : '0',
-						i32uValue & 0x01000000 ? '1' : '0');
+							i32uValue & 0x80000000 ? '1' : '0',
+							i32uValue & 0x40000000 ? '1' : '0',
+							i32uValue & 0x20000000 ? '1' : '0',
+							i32uValue & 0x10000000 ? '1' : '0',
+							i32uValue & 0x08000000 ? '1' : '0',
+							i32uValue & 0x04000000 ? '1' : '0',
+							i32uValue & 0x02000000 ? '1' : '0',
+							i32uValue & 0x01000000 ? '1' : '0');
 
 					printf("%c%c%c%c%c%c%c%c ",
-						i32uValue & 0x00800000 ? '1' : '0',
-						i32uValue & 0x00400000 ? '1' : '0',
-						i32uValue & 0x00200000 ? '1' : '0',
-						i32uValue & 0x00100000 ? '1' : '0',
-						i32uValue & 0x00080000 ? '1' : '0',
-						i32uValue & 0x00040000 ? '1' : '0',
-						i32uValue & 0x00020000 ? '1' : '0',
-						i32uValue & 0x00010000 ? '1' : '0');
+							i32uValue & 0x00800000 ? '1' : '0',
+							i32uValue & 0x00400000 ? '1' : '0',
+							i32uValue & 0x00200000 ? '1' : '0',
+							i32uValue & 0x00100000 ? '1' : '0',
+							i32uValue & 0x00080000 ? '1' : '0',
+							i32uValue & 0x00040000 ? '1' : '0',
+							i32uValue & 0x00020000 ? '1' : '0',
+							i32uValue & 0x00010000 ? '1' : '0');
 
 					printf("%c%c%c%c%c%c%c%c ",
-					       i32uValue & 0x00008000 ? '1' : '0',
-					       i32uValue & 0x00004000 ? '1' : '0',
-					       i32uValue & 0x00002000 ? '1' : '0',
-					       i32uValue & 0x00001000 ? '1' : '0',
-					       i32uValue & 0x00000800 ? '1' : '0',
-					       i32uValue & 0x00000400 ? '1' : '0',
-					       i32uValue & 0x00000200 ? '1' : '0',
-						i32uValue & 0x00000100 ? '1' : '0');
+							i32uValue & 0x00008000 ? '1' : '0',
+							i32uValue & 0x00004000 ? '1' : '0',
+							i32uValue & 0x00002000 ? '1' : '0',
+							i32uValue & 0x00001000 ? '1' : '0',
+							i32uValue & 0x00000800 ? '1' : '0',
+							i32uValue & 0x00000400 ? '1' : '0',
+							i32uValue & 0x00000200 ? '1' : '0',
+							i32uValue & 0x00000100 ? '1' : '0');
 
 					printf("%c%c%c%c%c%c%c%c\n",
-					       i32uValue & 0x00000080 ? '1' : '0',
-					       i32uValue & 0x00000040 ? '1' : '0',
-					       i32uValue & 0x00000020 ? '1' : '0',
-					       i32uValue & 0x00000010 ? '1' : '0',
-					       i32uValue & 0x00000008 ? '1' : '0',
-					       i32uValue & 0x00000004 ? '1' : '0',
-					       i32uValue & 0x00000002 ? '1' : '0',
-						i32uValue & 0x00000001 ? '1' : '0');
+							i32uValue & 0x00000080 ? '1' : '0',
+							i32uValue & 0x00000040 ? '1' : '0',
+							i32uValue & 0x00000020 ? '1' : '0',
+							i32uValue & 0x00000010 ? '1' : '0',
+							i32uValue & 0x00000008 ? '1' : '0',
+							i32uValue & 0x00000004 ? '1' : '0',
+							i32uValue & 0x00000002 ? '1' : '0',
+							i32uValue & 0x00000001 ? '1' : '0');
 				} else {
 					if (!quiet)
 						printf("4 Byte-Value of %s: %d dez (=%08x hex)\n", pszVariableName,
-						       i32uValue, i32uValue);
+								i32uValue, i32uValue);
 					else
 						printf("%d\n", i32uValue);
 				}
@@ -579,7 +579,7 @@ void writeVariableValue(char *pszVariableName, uint32_t i32uValue)
 			printf("Set bit error %s\n", getWriteError(rc));
 		else
 			printf("Set bit %d on byte at offset %d. Value %d\n", sPIValue.i8uBit, sPIValue.i16uAddress,
-			       sPIValue.i8uValue);
+					sPIValue.i8uValue);
 	} else if (sPiVariable.i16uLength == 8) {
 		i8uValue = i32uValue;
 		rc = piControlWrite(sPiVariable.i16uAddress, 1, (uint8_t *) & i8uValue);
@@ -587,7 +587,7 @@ void writeVariableValue(char *pszVariableName, uint32_t i32uValue)
 			printf("Write error %s\n", getWriteError(rc));
 		else
 			printf("Write value %d dez (=%02x hex) to offset %d.\n", i8uValue, i8uValue,
-			       sPiVariable.i16uAddress);
+					sPiVariable.i16uAddress);
 	} else if (sPiVariable.i16uLength == 16) {
 		i16uValue = i32uValue;
 		rc = piControlWrite(sPiVariable.i16uAddress, 2, (uint8_t *) & i16uValue);
@@ -595,14 +595,14 @@ void writeVariableValue(char *pszVariableName, uint32_t i32uValue)
 			printf("Write error %s\n", getWriteError(rc));
 		else
 			printf("Write value %d dez (=%04x hex) to offset %d.\n", i16uValue, i16uValue,
-			       sPiVariable.i16uAddress);
+					sPiVariable.i16uAddress);
 	} else if (sPiVariable.i16uLength == 32) {
 		rc = piControlWrite(sPiVariable.i16uAddress, 4, (uint8_t *) & i32uValue);
 		if (rc < 0)
 			printf("Write error %s\n", getWriteError(rc));
 		else
 			printf("Write value %d dez (=%08x hex) to offset %d.\n", i32uValue, i32uValue,
-			       sPiVariable.i16uAddress);
+					sPiVariable.i16uAddress);
 	}
 }
 
@@ -818,154 +818,154 @@ int main(int argc, char *argv[])
 	// Scan argument
 	while ((c = getopt(argc, argv, "dv:1qr:w:s:R:g:xlfS")) != -1) {
 		switch (c) {
-		case 'd':
-			showDeviceList();
-			break;
+			case 'd':
+				showDeviceList();
+				break;
 
-		case 'v':
-			if (strlen(optarg) > 0) {
-				showVariableInfo(optarg);
-			} else {
-				printf("No variable name\n");
-			}
-			break;
+			case 'v':
+				if (strlen(optarg) > 0) {
+					showVariableInfo(optarg);
+				} else {
+					printf("No variable name\n");
+				}
+				break;
 
-		case '1':	// execute the command only once, not cyclic
-			cyclic = false;
-			break;
+			case '1':	// execute the command only once, not cyclic
+				cyclic = false;
+				break;
 
-		case 'q':	// execute the command quietly
-			quiet = true;
-			break;
+			case 'q':	// execute the command quietly
+				quiet = true;
+				break;
 
-		case 'r':
-			format = 'd';
-			rc = sscanf(optarg, "%d,%d,%c", &offset, &length, &format);
-			if (rc == 3) {
-				readData(offset, length, cyclic, format, quiet);
-				return 0;
-			}
-			rc = sscanf(optarg, "%d,%d", &offset, &length);
-			if (rc == 2) {
-				readData(offset, length, cyclic, format, quiet);
-				return 0;
-			}
-			rc = sscanf(optarg, "%s", szVariableName);
-			if (rc == 1) {
-				pszTok = strtok(szVariableName, ",");
+			case 'r':
+				format = 'd';
+				rc = sscanf(optarg, "%d,%d,%c", &offset, &length, &format);
+				if (rc == 3) {
+					readData(offset, length, cyclic, format, quiet);
+					return 0;
+				}
+				rc = sscanf(optarg, "%d,%d", &offset, &length);
+				if (rc == 2) {
+					readData(offset, length, cyclic, format, quiet);
+					return 0;
+				}
+				rc = sscanf(optarg, "%s", szVariableName);
+				if (rc == 1) {
+					pszTok = strtok(szVariableName, ",");
+					if (pszTok != NULL) {
+						pszTok = strtok(NULL, ",");
+						if (pszTok != NULL) {
+							format = *pszTok;
+						}
+					}
+					readVariableValue(szVariableName, cyclic, format, quiet);
+					return 0;
+				}
+				printf("Wrong arguments for read function\n");
+				printf("1.) Try '-r variablename'\n");
+				printf("2.) Try '-r offset,length' (without spaces)\n");
+				break;
+
+			case 'w':
+				rc = sscanf(optarg, "%d,%d,%lu", &offset, &length, &value);
+				if (rc == 3) {
+					writeData(offset, length, value);
+					return 0;
+				}
+				pszTok = strtok(optarg, ",");
 				if (pszTok != NULL) {
+					strncpy(szVariableName, pszTok, sizeof(szVariableName));
 					pszTok = strtok(NULL, ",");
 					if (pszTok != NULL) {
-						format = *pszTok;
+						value = strtol(pszTok, NULL, 10);
+						writeVariableValue(szVariableName, value);
+						return 0;
 					}
 				}
-				readVariableValue(szVariableName, cyclic, format, quiet);
-				return 0;
-			}
-			printf("Wrong arguments for read function\n");
-			printf("1.) Try '-r variablename'\n");
-			printf("2.) Try '-r offset,length' (without spaces)\n");
-			break;
+				printf("Wrong arguments for write function\n");
+				printf("1.) Try '-w variablename,value' (without spaces)\n");
+				printf("2.) Try '-w offset,length,value' (without spaces)\n");
+				break;
 
-		case 'w':
-			rc = sscanf(optarg, "%d,%d,%lu", &offset, &length, &value);
-			if (rc == 3) {
-				writeData(offset, length, value);
-				return 0;
-			}
-			pszTok = strtok(optarg, ",");
-			if (pszTok != NULL) {
-				strncpy(szVariableName, pszTok, sizeof(szVariableName));
-				pszTok = strtok(NULL, ",");
-				if (pszTok != NULL) {
-					value = strtol(pszTok, NULL, 10);
-					writeVariableValue(szVariableName, value);
+			case 's':
+				rc = sscanf(optarg, "%d,%d,%lu", &offset, &bit, &value);
+				if (rc != 3) {
+					printf("Wrong arguments for set bit function\n");
+					printf("Try '-s offset,bit,value' (without spaces)\n");
 					return 0;
 				}
-			}
-			printf("Wrong arguments for write function\n");
-			printf("1.) Try '-w variablename,value' (without spaces)\n");
-			printf("2.) Try '-w offset,length,value' (without spaces)\n");
-			break;
+				setBit(offset, bit, value);
+				break;
 
-		case 's':
-			rc = sscanf(optarg, "%d,%d,%lu", &offset, &bit, &value);
-			if (rc != 3) {
-				printf("Wrong arguments for set bit function\n");
-				printf("Try '-s offset,bit,value' (without spaces)\n");
-				return 0;
-			}
-			setBit(offset, bit, value);
-			break;
-
-		case 'R':	// reset counter
-			rc = sscanf(optarg, "%d,0x%x", &address, &val);
-			if (rc != 2) {
-				rc = sscanf(optarg, "%d,%u", &address, &val);
+			case 'R':	// reset counter
+				rc = sscanf(optarg, "%d,0x%x", &address, &val);
 				if (rc != 2) {
-					printf("Wrong arguments for counter reset function\n");
-					printf("Try '-R address,value' (without spaces)\n");
+					rc = sscanf(optarg, "%d,%u", &address, &val);
+					if (rc != 2) {
+						printf("Wrong arguments for counter reset function\n");
+						printf("Try '-R address,value' (without spaces)\n");
+						return 0;
+					}
+				}
+				piControlResetCounter(address, val);
+				break;
+
+			case 'g':
+				rc = sscanf(optarg, "%d,%d", &offset, &bit);
+				if (rc != 2) {
+					printf("Wrong arguments for get bit function\n");
+					printf("Try '-g offset,bit' (without spaces)\n");
 					return 0;
 				}
-			}
-			piControlResetCounter(address, val);
-			break;
+				getBit(offset, bit, quiet);
+				break;
 
-		case 'g':
-			rc = sscanf(optarg, "%d,%d", &offset, &bit);
-			if (rc != 2) {
-				printf("Wrong arguments for get bit function\n");
-				printf("Try '-g offset,bit' (without spaces)\n");
-				return 0;
-			}
-			getBit(offset, bit, quiet);
-			break;
+			case 'x':
+				rc = piControlReset();
+				if (rc) {
+					printf("Cannot reset: %s\n", strerror(-rc));
+					return rc;
+				}
+				break;
 
-		case 'x':
-			rc = piControlReset();
-			if (rc) {
-				printf("Cannot reset: %s\n", strerror(-rc));
-				return rc;
-			}
-			break;
+			case 'l':
+				rc = piControlWaitForEvent();
+				if (rc < 0) {
+					printf("WaitForEvent returned: %d (%s)\n", rc, strerror(-rc));
+					return rc;
+				} else if (rc == 1) {
+					printf("WaitForEvent returned: Reset\n");
+					return rc;
+				} else {
+					printf("WaitForEvent returned: %d\n", rc);
+					return rc;
+				}
+				break;
 
-		case 'l':
-			rc = piControlWaitForEvent();
-			if (rc < 0) {
-				printf("WaitForEvent returned: %d (%s)\n", rc, strerror(-rc));
-				return rc;
-			} else if (rc == 1) {
-				printf("WaitForEvent returned: Reset\n");
-				return rc;
-			} else {
-				printf("WaitForEvent returned: %d\n", rc);
-				return rc;
-			}
-			break;
+			case 'f':
+				rc = piControlUpdateFirmware(0);
+				if (rc) {
+					printf("piControlUpdateFirmware returned: %d (%s)\n", rc, strerror(-rc));
+					return rc;
+				}
+				break;
 
-		case 'f':
-			rc = piControlUpdateFirmware(0);
-			if (rc) {
-				printf("piControlUpdateFirmware returned: %d (%s)\n", rc, strerror(-rc));
-				return rc;
-			}
-			break;
+			case 'S':
+				rc = piControlStopIO(2);	// toggle mode of I/Os
+				if (rc < 0) {
+					printf("error in setting I/O update mode: %d\n", rc);
+				} else if (rc == 0) {
+					printf("I/Os and process image are updated\n");
+				} else {
+					printf("update of I/Os and process image is stopped\n");
+				}
+				break;
 
-		case 'S':
-			rc = piControlStopIO(2);	// toggle mode of I/Os
-			if (rc < 0) {
-				printf("error in setting I/O update mode: %d\n", rc);
-			} else if (rc == 0) {
-				printf("I/Os and process image are updated\n");
-			} else {
-				printf("update of I/Os and process image is stopped\n");
-			}
-			break;
-
-		case 'h':
-		default:
-			printHelp(progname);
-			break;
+			case 'h':
+			default:
+				printHelp(progname);
+				break;
 		}
 	}
 	return 0;
