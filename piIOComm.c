@@ -164,7 +164,7 @@ EGpioValue piIoComm_readSniff(struct gpio_desc * pGpio)
 INT32S piIoComm_sendRS485Tel(INT16U i16uCmd_p, INT8U i8uAddress_p,
 		INT8U * pi8uSendData_p, INT8U i8uSendDataLen_p, INT8U * pi8uRecvData_p, INT16U * pi16uRecvDataLen_p)
 {
-	return pibridge_req_gate(i8uAddress_p, i16uCmd_p, pi8uSendData_p, i8uSendDataLen_p, pi8uRecvData_p, *pi16uRecvDataLen_p);
+	return pibridge_req_gate(i8uAddress_p, i16uCmd_p, pi8uSendData_p, i8uSendDataLen_p, pi8uRecvData_p, pi16uRecvDataLen_p ? *pi16uRecvDataLen_p : 0);
 }
 
 INT32S piIoComm_gotoFWUMode(int address)

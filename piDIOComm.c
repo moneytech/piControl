@@ -141,8 +141,10 @@ INT32U piDIOComm_Init(INT8U i8uDevice_p)
 					dioConfig_s[i].uHeader.sHeaderTyp1.bitLength,
 					NULL,
 					0);
-			if (ret) 
+			if (ret){ 
+				pr_err("piDIOComm_Init ret %d\n", ret);
 				return 1;
+			}
 		}
 	}
 
@@ -160,6 +162,7 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 	INT8U len_l, data_out[18], i, p, data_in[70];
 	static INT8U last_out[40][18];
 	INT8U i8uAddress;
+	u8 *pi;
 	u16 rcv_len;
 	int ret;
 	u8 cmd;
@@ -171,9 +174,10 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 	len_l = 18;
 	i8uAddress = RevPiDevice_getDev(i8uDevice_p)->i8uAddress;
 
+	pi = piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset;
 	if (piDev_g.stopIO == false) {
 		rt_mutex_lock(&piDev_g.lockPI);
-		memcpy(data_out, piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uOutputOffset, len_l);
+		memcpy(data_out, pi, len_l);
 		rt_mutex_unlock(&piDev_g.lockPI);
 	} else {
 		memset(data_out, 0, len_l);
@@ -186,7 +190,8 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 			break;
 		}
 	}
-
+	/*p ==255: every bytes are equal respectively*/
+	/*p < 2: byte[0,1] are not equal res..*/
 
 	if (p == 255 || p < 2) {
 		// nur die direkten output bits haben sich geändert -> SDioRequest
@@ -208,29 +213,28 @@ INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 		cmd = IOP_TYP1_CMD_DATA2;
 	}
 
-
 	memcpy(last_out[i8uAddress], data_out, sizeof(data_out));
 
 	rcv_len = 3 * sizeof(INT16U) + i8uNumCounter[i8uAddress] * sizeof(INT32U);
+
+	/*pr_info("piDIOComm_sendCyclicTelegram:addr %d, cmd %d, len %d\n",
+			i8uAddress, cmd, len_l);*/
 	ret = pibridge_req_io(i8uAddress, cmd, data_out, len_l, data_in, rcv_len); 
-	if (ret)
+	if (ret){
 		return 1; 
-
-	memcpy(&piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset, data_in, 3 * sizeof(INT16U));
-
-	memset(&piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset + 6, 0, 64);
-
-	rt_mutex_lock(&piDev_g.lockPI);
+	}
+	memset(pi + 6, 0, 64);
 	p = 0;
 	for (i = 0; i < 16; i++) {
 		if (i16uCounterAct[i8uAddress] & (1 << i)) {
-			memcpy(piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset + 3 * sizeof(INT16U) + i * sizeof(INT32U), 
-					&data_in[3 * sizeof(INT16U) + i * sizeof(INT32U)], sizeof(INT32U));
-		} 
+			rt_mutex_lock(&piDev_g.lockPI);
+			memcpy(pi + 3 * sizeof(INT16U) + i * sizeof(INT32U),
+					&data_in[3 * sizeof(INT16U) + p * sizeof(INT32U)],
+					sizeof(INT32U));
+			rt_mutex_unlock(&piDev_g.lockPI);
+			p++;
+		}
 	}
-
-	rt_mutex_unlock(&piDev_g.lockPI);
-
 
 	return 0;
 }

@@ -215,6 +215,12 @@ int RevPiDevice_run(void)
 	// if the user-ioctl want to send a telegram, do it now
 	if (piCore_g.pendingUserTel == true) {
 		pkthdr = &piCore_g.requestUserTel; 
+
+		pr_info("PIC:dev run:addr %d, cmd %d, len %d\n",
+				pkthdr->uHeader.sHeaderTyp1.bitAddress,
+				pkthdr->uHeader.sHeaderTyp1.bitCommand,
+				pkthdr->uHeader.sHeaderTyp1.bitLength);
+
 		piCore_g.statusUserTel = pibridge_req_io(
 				pkthdr->uHeader.sHeaderTyp1.bitAddress,
 				pkthdr->uHeader.sHeaderTyp1.bitCommand, 
@@ -246,17 +252,6 @@ TBOOL RevPiDevice_writeNextConfiguration(INT8U i8uAddress_p, MODGATECOM_IDResp *
 	} else {
 		pr_info("GetDeviceInfo: Id %d\n", pModgateId_p->i16uModulType);
 	}
-
-#if 0
-	ret_l = piIoComm_sendRS485Tel(eCmdPiIoConfigure, i8uAddress_p, NULL, 0, NULL, 0);
-	msleep(3);		// wait a while
-	if (ret_l) {
-#ifdef DEBUG_DEVICE
-		pr_err("piIoComm_sendRS485Tel(PiIoConfigure) failed %d\n", ret_l);
-#endif
-		return bFALSE;
-	}
-#endif
 
 	ret_l = piIoComm_sendRS485Tel(eCmdPiIoSetAddress, i8uAddress_p, NULL, 0, NULL, 0);
 	msleep(3);		// wait a while
@@ -353,7 +348,7 @@ TBOOL RevPiDevice_writeNextConfigurationLeft(void)
 
 void RevPiDevice_startDataexchange(void)
 {
-	INT32U ret_l = piIoComm_sendRS485Tel(eCmdPiIoStartDataExchange, MODGATE_RS485_BROADCAST_ADDR, NULL, 0, NULL, 0);
+	INT32U ret_l = pibridge_req_send_gate(MODGATE_RS485_BROADCAST_ADDR, eCmdPiIoStartDataExchange, NULL, 0); 
 	msleep(90);		// wait a while
 	if (ret_l) {
 #ifdef DEBUG_DEVICE
@@ -364,7 +359,7 @@ void RevPiDevice_startDataexchange(void)
 
 void RevPiDevice_stopDataexchange(void)
 {
-	INT32U ret_l = piIoComm_sendRS485Tel(eCmdPiIoStartDataExchange, MODGATE_RS485_BROADCAST_ADDR, NULL, 0, NULL, 0);
+	INT32U ret_l = pibridge_req_send_gate(MODGATE_RS485_BROADCAST_ADDR, eCmdPiIoStartDataExchange, NULL, 0); 
 	msleep(90);		// wait a while
 	if (ret_l) {
 #ifdef DEBUG_DEVICE

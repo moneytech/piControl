@@ -341,8 +341,8 @@ INT32U piAIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 		memset(data_out, 0, len_l);
 	}
 
-	
-
+	pr_info("PIC:aio send cylic tel:addr %d, cmd %d, len %d\n",
+			i8uAddress, IOP_TYP1_CMD_DATA, len_l);
 	ret = pibridge_req_io(i8uAddress, IOP_TYP1_CMD_DATA, data_out, len_l, data_in, len_l);
 	if (ret)
 		return 1;
