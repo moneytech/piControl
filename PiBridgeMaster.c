@@ -684,7 +684,7 @@ int PiBridgeMaster_Run(void)
 	} else	{		// piCore_g.eBridgeState == piBridgeStop
 		if (eRunStatus_s == enPiBridgeMasterStatus_EndOfConfig) {
 			pr_info("stop data exchange\n");
-			ret = piIoComm_gotoGateProtocol();
+			ret = pibridge_req_io(IOP_TYP2_CMD_GOTO_GATE_PROTOCOL,0, NULL, 0, NULL, 0);
 			pr_info("piIoComm_gotoGateProtocol returned %d\n", ret);
 			eRunStatus_s = enPiBridgeMasterStatus_Init;
 		} else if (eRunStatus_s == enPiBridgeMasterStatus_FWUMode) {

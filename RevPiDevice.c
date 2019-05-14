@@ -133,6 +133,7 @@ void RevPiDevice_init(void)
 //-------------------------------------------------------------------------------------------------
 int RevPiDevice_run(void)
 {
+	SIOGeneric *pkthdr;
 	INT8U i8uDevice = 0;
 	INT32U r;
 	int retval = 0;
@@ -213,7 +214,15 @@ int RevPiDevice_run(void)
 
 	// if the user-ioctl want to send a telegram, do it now
 	if (piCore_g.pendingUserTel == true) {
-		piCore_g.statusUserTel = piIoComm_sendTelegram(&piCore_g.requestUserTel, &piCore_g.responseUserTel);
+		pkthdr = &piCore_g.requestUserTel; 
+		piCore_g.statusUserTel = pibridge_req_io(
+				pkthdr->uHeader.sHeaderTyp1.bitAddress,
+				pkthdr->uHeader.sHeaderTyp1.bitCommand, 
+				pkthdr->ai8uData, 
+				pkthdr->uHeader.sHeaderTyp1.bitLength,	
+				NULL,
+				0);/*currently the response is not cared by user*/
+		
 		piCore_g.pendingUserTel = false;
 		up(&piCore_g.semUserTel);
 	}
