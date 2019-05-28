@@ -73,6 +73,7 @@ void PiBridgeMaster_Stop(void)
 void PiBridgeMaster_Continue(void)
 {
 	// this function can only be called, if the driver was running before
+	pr_info("PiBridgeMaster_Continue\n");
 	my_rt_mutex_lock(&piCore_g.lockBridgeState);
 	revpi_gate_init();
 	piCore_g.eBridgeState = piBridgeRun;
@@ -83,6 +84,7 @@ void PiBridgeMaster_Continue(void)
 
 void PiBridgeMaster_Reset(void)
 {
+	pr_info("PiBridgeMaster_Reset\n");
 	my_rt_mutex_lock(&piCore_g.lockBridgeState);
 	piCore_g.eBridgeState = piBridgeInit;
 	eRunStatus_s = enPiBridgeMasterStatus_Init;
@@ -650,6 +652,7 @@ int PiBridgeMaster_Run(void)
 				bEntering_s = bFALSE;
 			}
 			if (kbUT_TimerExpired(&tConfigTimeoutTimer_s)) {
+				pr_info("case enPiBridgeMasterStatus_InitRetry\n");
 				piCore_g.eBridgeState = piBridgeInit;
 				eRunStatus_s = enPiBridgeMasterStatus_Init;
 				bEntering_s = bTRUE;
@@ -684,7 +687,7 @@ int PiBridgeMaster_Run(void)
 	} else	{		// piCore_g.eBridgeState == piBridgeStop
 		if (eRunStatus_s == enPiBridgeMasterStatus_EndOfConfig) {
 			pr_info("stop data exchange\n");
-			ret = pibridge_req_io(IOP_TYP2_CMD_GOTO_GATE_PROTOCOL,0, NULL, 0, NULL, 0);
+			ret = pibridge_req_send_io(IOP_TYP2_CMD_GOTO_GATE_PROTOCOL,0, NULL, 0);
 			pr_info("piIoComm_gotoGateProtocol returned %d\n", ret);
 			eRunStatus_s = enPiBridgeMasterStatus_Init;
 		} else if (eRunStatus_s == enPiBridgeMasterStatus_FWUMode) {

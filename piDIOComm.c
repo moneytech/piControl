@@ -128,7 +128,7 @@ INT32U piDIOComm_Init(INT8U i8uDevice_p)
 	int ret;
 	INT8U i;
 
-	pr_info_dio("piDIOComm_Init %d of %d  addr %d numCnt %d\n", i8uDevice_p, i8uConfigured_s,
+	pr_info("piDIOComm_Init %d of %d  addr %d numCnt %d\n", i8uDevice_p, i8uConfigured_s,
 			RevPiDevice_getDev(i8uDevice_p)->i8uAddress,
 			i8uNumCounter[RevPiDevice_getDev(i8uDevice_p)->i8uAddress]);
 
@@ -147,94 +147,113 @@ INT32U piDIOComm_Init(INT8U i8uDevice_p)
 			}
 		}
 	}
-
+	pr_info("piDIOComm:%d\n", piCore_g.eBridgeState);
 	return 0;
 }
 
-struct dio_pwm {
-	u16	i16uOutput;
-	u16	i16uChannels;
-	u8	ai8uValue[16];
+#define DIO_PIN_COUNT 16
+#define DIO_ENCODER_MAX	8
+
+#define DIO_OUTPUT_BUF_PWM (DIO_PIN_COUNT * sizeof(u8))
+#define DIO_OUTPUT_BUF_MAX  (DIO_OUTPUT_BUF_PWM + sizeof(u16))
+
+#pragma pack(push, 1)
+struct dio_pwm_hdr {
+	u16     output;
+	u16     channels;
 };
+
+struct dio_pwm {
+	struct 	dio_pwm_hdr 	hdr;
+	u8     			value[DIO_PIN_COUNT];
+};
+struct dio_resp_hdr {
+	u16	input;
+	u16 	output;
+	u16 	mod_status;
+};
+struct dio_resp {
+	struct dio_resp_hdr	hdr;
+	u32 			counter[DIO_ENCODER_MAX];
+};
+#pragma pack(pop)
 
 INT32U piDIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 {
-	INT8U len_l, data_out[18], i, p, data_in[70];
-	static INT8U last_out[40][18];
-	INT8U i8uAddress;
-	u8 *pi;
-	u16 rcv_len;
+	static u8 last_out[40][DIO_OUTPUT_BUF_PWM];
+	u8 buf_out[DIO_OUTPUT_BUF_MAX];
+	struct dio_resp	*img_input;
+	struct dio_resp	buf_resp;
+	u16 sndlen;
+	u16 rcvlen;
 	int ret;
+	u8 addr;
 	u8 cmd;
+	int i;
+	int p;
 
-	if (RevPiDevice_getDev(i8uDevice_p)->sId.i16uFBS_OutputLength != 18) {
-		return 4;
-	}
-
-	len_l = 18;
-	i8uAddress = RevPiDevice_getDev(i8uDevice_p)->i8uAddress;
-
-	pi = piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset;
 	if (piDev_g.stopIO == false) {
 		rt_mutex_lock(&piDev_g.lockPI);
-		memcpy(data_out, pi, len_l);
+		memcpy(buf_out, piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uOutputOffset, DIO_OUTPUT_BUF_MAX);
 		rt_mutex_unlock(&piDev_g.lockPI);
 	} else {
-		memset(data_out, 0, len_l);
+		memset(buf_out, 0, DIO_OUTPUT_BUF_MAX);
 	}
 
-	p = 255;
-	for (i = len_l; i > 0; i--) {
-		if (data_out[i - 1] != last_out[i8uAddress][i - 1]) {
-			p = i - 1;
-			break;
-		}
-	}
-	/*p ==255: every bytes are equal respectively*/
-	/*p < 2: byte[0,1] are not equal res..*/
+	addr = RevPiDevice_getDev(i8uDevice_p)->i8uAddress;
+	rcvlen = sizeof(struct dio_resp_hdr) + i8uNumCounter[addr] * sizeof(u32);
 
-	if (p == 255 || p < 2) {
-		// nur die direkten output bits haben sich geändert -> SDioRequest
-		len_l = sizeof(INT16U);
+	if (0 == memcmp(buf_out + 2, last_out[addr], DIO_OUTPUT_BUF_PWM)) {
+		sndlen = sizeof(u16);
 		cmd = IOP_TYP1_CMD_DATA;
+		ret = pibridge_req_io(addr, cmd, buf_out, sndlen, (u8 *)&buf_resp, rcvlen);
+		if (ret){
+			pr_err_ratelimited("io direct request error\n");
+			return -1;
+		}
 	} else {
-		struct dio_pwm *pReq = (struct dio_pwm*) &data_out;
+		u8 *last = last_out[addr];
+		u8 *buf = buf_out + sizeof(u16);
+		struct dio_pwm pwm;
+		int cnt = 0;
 
-		// kopiere die pwm werte die sich geändert haben
-		pReq->i16uChannels = 0;
-		p = 0;
-		for (i = 0; i < 16; i++) {
-			if (last_out[i8uAddress][i + 2] != data_out[i + 2]) {
-				pReq->i16uChannels |= 1 << i;
-				pReq->ai8uValue[p++] = data_out[i + 2];
+		memcpy(&pwm.hdr.output, buf_out, sizeof(pwm.hdr.output));
+		pwm.hdr.channels = 0;
+		for (i = 0; i < DIO_PIN_COUNT; i++) {
+			if (*(last + i) != *(buf + i)) {
+				pwm.hdr.channels |= 1 << i;
+				pwm.value[cnt++] = *(buf + i);
 			}
 		}
-		len_l = p + 2 * sizeof(INT16U);
+		sndlen = cnt * sizeof(u8) + sizeof(pwm.hdr);
 		cmd = IOP_TYP1_CMD_DATA2;
+		ret = pibridge_req_io(addr, cmd, (u8 *)&pwm, sndlen,(u8 *)&buf_resp, rcvlen);
+		if (ret){
+			pr_err_ratelimited("io pwm request error\n");
+			return -2;
+		}
 	}
+	memcpy(last_out[addr], buf_out + sizeof(u16), DIO_OUTPUT_BUF_MAX);
 
-	memcpy(last_out[i8uAddress], data_out, sizeof(data_out));
+	img_input = (struct dio_resp *)(piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uInputOffset);
+	rt_mutex_lock(&piDev_g.lockPI);
 
-	rcv_len = 3 * sizeof(INT16U) + i8uNumCounter[i8uAddress] * sizeof(INT32U);
+	img_input->hdr.input = buf_resp.hdr.input;
+	img_input->hdr.output = buf_resp.hdr.output;
+	img_input->hdr.mod_status = buf_resp.hdr.mod_status;
 
-	/*pr_info("piDIOComm_sendCyclicTelegram:addr %d, cmd %d, len %d\n",
-			i8uAddress, cmd, len_l);*/
-	ret = pibridge_req_io(i8uAddress, cmd, data_out, len_l, data_in, rcv_len); 
-	if (ret){
-		return 1; 
-	}
-	memset(pi + 6, 0, 64);
-	p = 0;
-	for (i = 0; i < 16; i++) {
-		if (i16uCounterAct[i8uAddress] & (1 << i)) {
-			rt_mutex_lock(&piDev_g.lockPI);
-			memcpy(pi + 3 * sizeof(INT16U) + i * sizeof(INT32U),
-					&data_in[3 * sizeof(INT16U) + p * sizeof(INT32U)],
-					sizeof(INT32U));
-			rt_mutex_unlock(&piDev_g.lockPI);
+	/* to be consistent with original code, should be not needed */
+	/*70 = 6 + 64 = 6 + sizeof(u32) * 16, currently 8 is the maximun as two pins consist one encoder. */
+	memset(img_input, 0, 70 - sizeof(struct dio_resp_hdr));
+
+	for (p = 0, i = 0; i < DIO_ENCODER_MAX; i++) {
+		if (i16uCounterAct[addr] & (1 << i)) {
+			img_input->counter[i] = buf_resp.counter[p];
 			p++;
 		}
 	}
+	rt_mutex_unlock(&piDev_g.lockPI);
 
 	return 0;
 }
+
