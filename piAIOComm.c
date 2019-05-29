@@ -315,14 +315,15 @@ INT32U piAIOComm_Init(INT8U i8uDevice_p)
 		}
 	}
 
-	return 4;		// unknown device
+	return 0;
 }
 
 INT32U piAIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 {
-	INT8U len_l;
 	INT8U data_out[sizeof(SAioRequest) - IOPROTOCOL_HEADER_LENGTH - 1];
 	INT8U data_in[sizeof(SAioResponse) - IOPROTOCOL_HEADER_LENGTH - 1];
+	u8 sndlen = sizeof(data_out);
+	u8 rcvlen = sizeof(data_in);
 	INT8U i8uAddress;
 	int ret;
 
@@ -330,22 +331,21 @@ INT32U piAIOComm_sendCyclicTelegram(INT8U i8uDevice_p)
 		return 4;
 	}
 
-	len_l = sizeof(data_out);
 	i8uAddress = RevPiDevice_getDev(i8uDevice_p)->i8uAddress;
 
 	if (piDev_g.stopIO == false) {
 		my_rt_mutex_lock(&piDev_g.lockPI);
-		memcpy(data_out, piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uOutputOffset, len_l);
+		memcpy(data_out, piDev_g.ai8uPI + RevPiDevice_getDev(i8uDevice_p)->i16uOutputOffset, sndlen);
 		rt_mutex_unlock(&piDev_g.lockPI);
 	} else {
-		memset(data_out, 0, len_l);
+		memset(data_out, 0, sndlen);
 	}
 
-	pr_info("PIC:aio send cylic tel:addr %d, cmd %d, len %d\n",
-			i8uAddress, IOP_TYP1_CMD_DATA, len_l);
-	ret = pibridge_req_io(i8uAddress, IOP_TYP1_CMD_DATA, data_out, len_l, data_in, len_l);
-	if (ret)
+	ret = pibridge_req_io(i8uAddress, IOP_TYP1_CMD_DATA, data_out, sndlen, data_in, rcvlen);
+	if (ret) {
+		pr_err("aio send cylic tel error:addr %d, cmd %d, len %d\n", i8uAddress, IOP_TYP1_CMD_DATA, rcvlen);
 		return 1;
+	}
 
 	if (piDev_g.stopIO == false) {
 		my_rt_mutex_lock(&piDev_g.lockPI);
