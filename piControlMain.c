@@ -448,7 +448,6 @@ bool waitRunning(int timeout)	// ms
 
 	timeout /= 100;
 	timeout++;
-	pr_info("waitRunning bridge state:%d\n", piCore_g.eBridgeState);
 
 	while (timeout > 0 && piCore_g.eBridgeState != piBridgeRun) {
 		msleep(100);
